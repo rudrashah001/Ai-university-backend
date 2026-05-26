@@ -59,6 +59,7 @@ async function saveChat(userId, chatId, messages) {
 
 router.post("/", async (req, res) => {
   try {
+    console.log("REQUEST BODY:", JSON.stringify(req.body, null, 2));
     const { messages, chatId } = req.body;
 
     const lastUserMessage = [...messages]
@@ -81,10 +82,17 @@ router.post("/", async (req, res) => {
       ? `${SIT_SYSTEM_PROMPT}\n\n${contextPrompt}`
       : `${SIT_SYSTEM_PROMPT}\n\nFor full details visit ${SIT_WEBSITE_URL}`;
 
+    const normalizedMessages = messages.map(m => {
+      if (!m.parts && m.content) {
+        return { ...m, parts: [{ type: "text", text: m.content }] };
+      }
+      return m;
+    });
+
     const result = streamText({
       model: google(process.env.GENERATIVE_MODEL || "gemini-flash-latest"),
       system: systemPrompt,
-      messages: await convertToModelMessages(messages),
+      messages: await convertToModelMessages(normalizedMessages),
     });
 
     const user = await getCurrentUser(req);
