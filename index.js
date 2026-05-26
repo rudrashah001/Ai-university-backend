@@ -20,10 +20,22 @@ const FRONTEND_PREVIEW_URL =
 const FRONTEND_PROD_URL = "https://ai-university-frontend.vercel.app";
 const allowedOrigins = [CLIENT_URL, FRONTEND_PREVIEW_URL, FRONTEND_PROD_URL];
 
+const isLocalhostOrigin = (origin) => {
+  return (
+    typeof origin === "string" &&
+    (origin.startsWith("http://localhost:") ||
+      origin.startsWith("http://127.0.0.1:"))
+  );
+};
+
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (
+        !origin ||
+        allowedOrigins.includes(origin) ||
+        isLocalhostOrigin(origin)
+      ) {
         return callback(null, true);
       }
       callback(new Error("CORS policy: origin not allowed"));
