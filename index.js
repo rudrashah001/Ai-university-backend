@@ -28,13 +28,21 @@ const isLocalhostOrigin = (origin) => {
   );
 };
 
+const isVercelOrigin = (origin) => {
+  return (
+    typeof origin === "string" &&
+    (origin.endsWith(".vercel.app") || origin.endsWith(".vercel.sh"))
+  );
+};
+
 app.use(
   cors({
     origin: (origin, callback) => {
       if (
         !origin ||
         allowedOrigins.includes(origin) ||
-        isLocalhostOrigin(origin)
+        isLocalhostOrigin(origin) ||
+        isVercelOrigin(origin)
       ) {
         return callback(null, true);
       }
