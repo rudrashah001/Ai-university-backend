@@ -15,10 +15,18 @@ const app = express();
 
 const PORT = process.env.PORT || 5000;
 const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
+const FRONTEND_URL =
+  "https://ai-university-frontend-j4qjv6rny-rudrashah001s-projects.vercel.app";
+const allowedOrigins = [CLIENT_URL, FRONTEND_URL];
 
 app.use(
   cors({
-    origin: CLIENT_URL,
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      callback(new Error("CORS policy: origin not allowed"));
+    },
     credentials: true,
   }),
 );
