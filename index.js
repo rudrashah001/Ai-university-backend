@@ -15,9 +15,10 @@ const app = express();
 
 const PORT = process.env.PORT || 5000;
 const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
-const FRONTEND_URL =
+const FRONTEND_PREVIEW_URL =
   "https://ai-university-frontend-j4qjv6rny-rudrashah001s-projects.vercel.app";
-const allowedOrigins = [CLIENT_URL, FRONTEND_URL];
+const FRONTEND_PROD_URL = "https://ai-university-frontend.vercel.app";
+const allowedOrigins = [CLIENT_URL, FRONTEND_PREVIEW_URL, FRONTEND_PROD_URL];
 
 app.use(
   cors({
